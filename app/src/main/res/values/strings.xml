@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">daytoday</string>
+    <string name="search">Search</string>
+    <string name="daytoday">Day To Day</string>
+</resources>

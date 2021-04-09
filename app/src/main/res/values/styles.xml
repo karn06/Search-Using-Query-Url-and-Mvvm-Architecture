@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorPrimaryDark">@color/light_green</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:typeface">serif</item>
+
+    </style>
+
+    <style name="MediumLightStyle" parent="android:Widget.TextView">
+        <item name="fontFamily">@font/poppins_medium</item>
+        <item name="android:textSize">@dimen/_14ssp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+
+    <style name="SmallLightStyle" parent="android:Widget.TextView">
+        <item name="fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">@dimen/_12ssp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+
+    <style name="ToolbarTitleTextAppearance" parent="Widget.AppCompat.Toolbar">
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">@dimen/_8ssp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>
