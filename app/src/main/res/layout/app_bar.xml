@@ -25,7 +25,4 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <include layout="@layout/container" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

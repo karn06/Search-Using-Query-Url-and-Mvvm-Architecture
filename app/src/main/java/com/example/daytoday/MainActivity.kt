@@ -2,7 +2,6 @@ package com.example.daytoday
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -10,11 +9,9 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.provider.SearchRecentSuggestions
 import android.provider.Settings
 import android.view.Menu
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -22,11 +19,14 @@ import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.daytoday.databinding.ActivityMainBinding
+import com.example.daytoday.databinding.WebViewBinding
 import com.example.daytoday.model.Pages
 import com.example.daytoday.model.Wiki
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,13 +38,18 @@ class MainActivity : AppCompatActivity() {
     lateinit var clickListener: Adapter.onClickListener
     lateinit var alertDialog: AlertDialog
     lateinit var networkChangeReceiver: NetworkChangeReceiver
+    lateinit var activityMainBinding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+        val view = activityMainBinding.root
+        setContentView(view)
+        setSupportActionBar(toolbar)
+
         alertDialog = AlertDialog.Builder(this).create()
         setNetworkReceiver()
-        setSupportActionBar(toolbar)
         initViewModel()
         clickListener()
     }
@@ -79,52 +84,49 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             registerReceiver(
                 networkChangeReceiver,
                 IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
             )
-        }
+        }*/
     }
 
     override fun onPause() {
         super.onPause()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            unregisterReceiver(networkChangeReceiver)
-        }
+        /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+              unregisterReceiver(networkChangeReceiver)
+          }*/
     }
 
-    fun initViewModel() {
+    private fun initViewModel() {
         model = getViewModel()
         model.listLiveData.observe(this,
             Observer<Result<Wiki>> {
                 when (it) {
                     is Result.Loading -> {
-                        recyclerView.visibility = View.GONE
-                        progressBar.visibility = View.VISIBLE
-                        shimmerLayout.startShimmer()
-                        shimmerLayout.visibility = View.VISIBLE
+                        activityMainBinding.recyclerView.visibility = View.GONE
+                        activityMainBinding.shimmerLayout.startShimmer()
+                        activityMainBinding.shimmerLayout.visibility = View.VISIBLE
                     }
 
                     is Result.Success -> {
-                        shimmerLayout.stopShimmer()
-                        recyclerView.visibility = View.VISIBLE
-                        progressBar.visibility = View.GONE
-                        shimmerLayout.visibility = View.GONE
+                        activityMainBinding.shimmerLayout.stopShimmer()
+                        activityMainBinding.recyclerView.visibility = View.VISIBLE
+                        activityMainBinding.shimmerLayout.visibility = View.GONE
                         if (it.data.query != null && it.data.query.pages.isNotEmpty()) {
-                            noRecordFound.visibility = View.GONE
-                            recyclerView.visibility = View.VISIBLE
+                            activityMainBinding.noRecordFound.visibility = View.GONE
+                            activityMainBinding.recyclerView.visibility = View.VISIBLE
                             setAdapter(it.data.query.pages)
                         } else {
-                            noRecordFound.visibility = View.VISIBLE
-                            recyclerView.visibility = View.GONE
+                            activityMainBinding.noRecordFound.visibility = View.VISIBLE
+                            activityMainBinding.recyclerView.visibility = View.GONE
                         }
                     }
                     is Result.Error -> {
-                        recyclerView.visibility = View.GONE
-                        shimmerLayout.visibility = View.GONE
-                        shimmerLayout.stopShimmer()
-                        progressBar.visibility = View.GONE
+                        activityMainBinding.recyclerView.visibility = View.GONE
+                        activityMainBinding.shimmerLayout.visibility = View.GONE
+                        activityMainBinding.shimmerLayout.stopShimmer()
                         Toast.makeText(
                             applicationContext,
                             "Something Went Wrong!!",
@@ -166,8 +168,9 @@ class MainActivity : AppCompatActivity() {
                         ""
                     }
 
-                    if (searchQuery.isNotEmpty())
+                    if (searchQuery.isNotEmpty()) {
                         callApi(searchQuery)
+                    }
                 }
                 handler.postDelayed(runnable!!, 1000)
                 return false
@@ -181,6 +184,7 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+
     private fun getViewModel(): MainViewModel {
         val factory = ViewModelFactory.getInstance(application)
         return ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
@@ -188,10 +192,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAdapter(pages: ArrayList<Pages>) {
         val layoutManager = LinearLayoutManager(applicationContext)
-        recyclerView.layoutManager = layoutManager
+        activityMainBinding.recyclerView.layoutManager = layoutManager
         val adapter = Adapter()
         adapter.setData(applicationContext, pages, clickListener)
-        recyclerView.adapter = adapter
+        activityMainBinding.recyclerView.adapter = adapter
     }
 
     private fun callApi(query: String) {
