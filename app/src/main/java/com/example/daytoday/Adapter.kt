@@ -66,8 +66,7 @@ class Adapter : RecyclerView.Adapter<Adapter.RecyclerViewHolder>() {
         val profilePicture = view.profilePicture
         val title = view.title
         val description = view.description
-        val item = view.layout
-
+        val item = view.list_item
     }
 
     interface onClickListener {
