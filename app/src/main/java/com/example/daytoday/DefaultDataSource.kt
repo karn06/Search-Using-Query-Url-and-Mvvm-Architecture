@@ -5,9 +5,6 @@ import android.util.Log
 import com.example.daytoday.model.Wiki
 import retrofit2.Call
 import retrofit2.Response
-import org.json.JSONObject
-import retrofit2.Callback
-import retrofit2.Retrofit
 import java.io.IOException
 
 object DefaultDataSource : DataSource {
@@ -28,8 +25,8 @@ object DefaultDataSource : DataSource {
             1,
             "thumbnail",
             50,
-            "10",
-            "description","prefixsearch",title,"url"
+            10,
+            "description", "prefixsearch", title, "url"
         )
 
         call.enqueue(object : CustomerRetrofitCallBack<Wiki>() {

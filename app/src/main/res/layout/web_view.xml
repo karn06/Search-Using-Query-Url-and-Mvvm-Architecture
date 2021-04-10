@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:scaleType="center"
-            app:srcCompat="@drawable/declined" />
+            app:srcCompat="@drawable/ic_baseline_close_24" />
 
     </RelativeLayout>
 </layout>

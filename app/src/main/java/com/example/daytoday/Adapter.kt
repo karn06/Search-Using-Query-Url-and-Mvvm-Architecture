@@ -4,12 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.Resource
 import com.example.daytoday.model.Pages
 import kotlinx.android.synthetic.main.search_item.view.*
 import java.lang.StringBuilder
 import java.util.*
+import java.util.logging.Handler
 
 class Adapter : RecyclerView.Adapter<Adapter.RecyclerViewHolder>() {
 
@@ -33,6 +37,7 @@ class Adapter : RecyclerView.Adapter<Adapter.RecyclerViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
 
         var pagePosition = pages[position]
+
         holder.apply {
 
             if (pagePosition.thumbnail != null)

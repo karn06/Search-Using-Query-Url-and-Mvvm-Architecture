@@ -21,7 +21,7 @@ interface Api {
         @Query("redirects") redirects: Int,
         @Query("piprop") piprop: String,
         @Query("pithumbsize") pithumbsize: Int,
-        @Query("pilimit") pilimit: String,
+        @Query("pilimit") pilimit: Int,
         @Query("wbptterms") wbptterms: String,
         @Query("generator") generator: String,
         @Query("gpssearch") gpssearch: String,

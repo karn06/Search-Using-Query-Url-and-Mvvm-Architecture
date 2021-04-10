@@ -19,8 +19,8 @@ import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.daytoday.databinding.ActivityMainBinding
-import com.example.daytoday.databinding.WebViewBinding
 import com.example.daytoday.model.Pages
 import com.example.daytoday.model.Wiki
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var alertDialog: AlertDialog
     lateinit var networkChangeReceiver: NetworkChangeReceiver
     lateinit var activityMainBinding: ActivityMainBinding
-
+    lateinit var searchView: SearchView
+    private lateinit var adapter: Adapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         setSupportActionBar(toolbar)
 
+        adapter = Adapter()
         alertDialog = AlertDialog.Builder(this).create()
         setNetworkReceiver()
         initViewModel()
@@ -84,19 +86,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             registerReceiver(
                 networkChangeReceiver,
                 IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
             )
-        }*/
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-              unregisterReceiver(networkChangeReceiver)
-          }*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            unregisterReceiver(networkChangeReceiver)
+        }
     }
 
     private fun initViewModel() {
@@ -150,7 +152,7 @@ class MainActivity : AppCompatActivity() {
 
         menuInflater.inflate(R.menu.search_menu, menu)
         val searchItem = menu.findItem(R.id.searchMenu)
-        val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+        searchView = MenuItemCompat.getActionView(searchItem) as SearchView
         searchView.queryHint = "Search"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -181,6 +183,7 @@ class MainActivity : AppCompatActivity() {
             searchQuery = ""
             false
         }
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -193,10 +196,10 @@ class MainActivity : AppCompatActivity() {
     private fun setAdapter(pages: ArrayList<Pages>) {
         val layoutManager = LinearLayoutManager(applicationContext)
         activityMainBinding.recyclerView.layoutManager = layoutManager
-        val adapter = Adapter()
         adapter.setData(applicationContext, pages, clickListener)
         activityMainBinding.recyclerView.adapter = adapter
     }
+
 
     private fun callApi(query: String) {
         model.callParseDataCall(query)
@@ -208,6 +211,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        searchView.isIconified = true
         super.onBackPressed()
     }
 }
