@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.daytoday.model.Pages
 import com.example.daytoday.model.Wiki
+import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import java.util.*
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     val handler = Handler()
     var searchQuery = ""
     lateinit var clickListener: Adapter.onClickListener
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +43,17 @@ class MainActivity : AppCompatActivity() {
             Observer<Result<Wiki>> {
                 when (it) {
                     is Result.Loading -> {
+                        recyclerView.visibility = View.GONE
                         progressBar.visibility = View.VISIBLE
+                        shimmerLayout.startShimmer()
+                        shimmerLayout.visibility = View.VISIBLE
                     }
 
                     is Result.Success -> {
+                        shimmerLayout.stopShimmer()
+                        recyclerView.visibility = View.VISIBLE
                         progressBar.visibility = View.GONE
+                        shimmerLayout.visibility = View.GONE
                         if (it.data.query != null && it.data.query.pages.isNotEmpty()) {
                             noRecordFound.visibility = View.GONE
                             recyclerView.visibility = View.VISIBLE
@@ -56,6 +64,9 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     is Result.Error -> {
+                        recyclerView.visibility = View.GONE
+                        shimmerLayout.visibility = View.GONE
+                        shimmerLayout.stopShimmer();
                         progressBar.visibility = View.GONE
                         Toast.makeText(
                             applicationContext,

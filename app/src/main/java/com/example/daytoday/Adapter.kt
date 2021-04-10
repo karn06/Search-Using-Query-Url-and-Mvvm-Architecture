@@ -38,6 +38,9 @@ class Adapter : RecyclerView.Adapter<Adapter.RecyclerViewHolder>() {
             if (pagePosition.thumbnail != null)
                 Glide.with(context)
                     .load(pagePosition.thumbnail.source).into(profilePicture)
+            else
+                Glide.with(context)
+                    .load(R.drawable.profile_icon).into(profilePicture)
 
             title.text = pagePosition.title
             var stringBuilder = StringBuilder()
